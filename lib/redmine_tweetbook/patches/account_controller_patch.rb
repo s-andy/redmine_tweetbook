@@ -5,14 +5,14 @@ module RedmineTweetbook
         base.send(:include, InstanceMethods)
       end
 
-      module InstanceMethods        
+      module InstanceMethods
         def tweetbook_authenticate
           auth_hash = request.env['omniauth.auth']
           tweet_book = TweetBook.find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid']) || TweetBook.create_with_auth_hash(auth_hash)
 
-          user = User.find_or_initialize_by_mail(tweet_book.email)
-	        if user.new_record?
-      	    # Self-registration off
+          user = User.find_or_initialize_by(:mail => tweet_book.email)
+          if user.new_record?
+            # Self-registration off
             redirect_to(home_url) && return unless Setting.self_registration?
 
             # Create on the fly
@@ -44,7 +44,7 @@ module RedmineTweetbook
             else
               account_pending
             end
-          end	
+          end
         rescue AuthSourceException => e
           logger.error "An error occured when authenticating #{e.message}"
           render_error :message => e.message
