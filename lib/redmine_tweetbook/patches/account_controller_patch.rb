@@ -6,8 +6,16 @@ module RedmineTweetbook
       end
 
       module InstanceMethods
+
         def tweetbook_authenticate
           auth_hash = request.env['omniauth.auth']
+
+          unless auth_hash['info']['nickname'] && auth_hash['info']['name'] && auth_hash['info']['email']
+            flash[:error] = l(:notice_account_missing_data)
+            redirect_to(home_url)
+            return
+          end
+
           tweet_book = TweetBook.find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid']) || TweetBook.create_with_auth_hash(auth_hash)
 
           user = User.find_or_initialize_by(:mail => tweet_book.email)
