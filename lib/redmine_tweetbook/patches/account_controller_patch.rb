@@ -10,23 +10,21 @@ module RedmineTweetbook
         def tweetbook_authenticate
           auth_hash = request.env['omniauth.auth']
 
-          unless auth_hash['info']['nickname'] && auth_hash['info']['name'] && auth_hash['info']['email']
+          unless auth_hash['info']['name'] && auth_hash['info']['email']
             flash[:error] = l(:notice_account_missing_data)
             redirect_to(home_url)
             return
           end
 
-          tweet_book = TweetBook.find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid']) || TweetBook.create_with_auth_hash(auth_hash)
-
-          user = User.find_or_initialize_by(:mail => tweet_book.email)
+          user = User.find_or_initialize_by(:mail => auth_hash['info']['email'])
           if user.new_record?
             # Self-registration off
             redirect_to(home_url) && return unless Setting.self_registration?
 
             # Create on the fly
-            user.login = tweet_book.email
-            user.mail  = tweet_book.email
-            user.firstname, user.lastname = tweet_book.name.split(' ') unless tweet_book.name.nil?
+            user.login = auth_hash['info']['email']
+            user.mail  = auth_hash['info']['email']
+            user.firstname, user.lastname = auth_hash['info']['name'].split(' ')
             user.random_password
             user.register
 
@@ -44,7 +42,6 @@ module RedmineTweetbook
                 onthefly_creation_failed(user)
               end
             end
-            tweet_book.update_attribute :user_id, user.id
           else
             # Existing record
             if user.active?
