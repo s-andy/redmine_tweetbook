@@ -24,8 +24,8 @@ module RedmineTweetbook
             redirect_to(home_url) && return unless Setting.self_registration?
 
             # Create on the fly
-            user.login = tweet_book.nickname + '_' + tweet_book.uid unless tweet_book.nickname.nil?
-            user.mail = tweet_book.email unless tweet_book.email.nil?
+            user.login = tweet_book.email
+            user.mail  = tweet_book.email
             user.firstname, user.lastname = tweet_book.name.split(' ') unless tweet_book.name.nil?
             user.random_password
             user.register
