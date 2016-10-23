@@ -25,6 +25,7 @@ module RedmineTweetbook
             user.login = auth_hash['info']['email']
             user.mail  = auth_hash['info']['email']
             user.firstname, user.lastname = auth_hash['info']['name'].split(' ')
+            populate_user_data(user, auth_hash)
             user.random_password
             user.register
 
@@ -53,6 +54,61 @@ module RedmineTweetbook
         rescue AuthSourceException => e
           logger.error "An error occured when authenticating #{e.message}"
           render_error :message => e.message
+        end
+
+        def populate_user_data(user, auth_hash)
+            if auth_hash['provider'] == 'twitter'
+                if auth_hash['extra']['raw_info']['lang']
+                    # TODO en
+                end
+                if auth_hash['extra']['raw_info']['time_zone']
+                    # TODO
+                end
+                if auth_hash['extra']['raw_info']['entities']['url']['urls'][0]['expanded_url']
+                    # TODO http://www.andriylesyuk.com
+                end
+                if auth_hash['info']['description']
+                    # TODO Developer in @Kayako. Author of Mastering Redmine by @packtpub. Software developer, life analyzer and truth seeker.
+                end
+                if auth_hash['info']['location']
+                    # TODO Ivano-Frankivsk, Ukraine
+                end
+                if auth_hash['info']['urls']['Twitter']
+                    # TODO https://twitter.com/AndriyLesyuk
+                end
+                if auth_hash['info']['urls']['Website']
+                    # TODO http://t.co/Xdn0anT513
+                end
+                if auth_hash['info']['nickname']
+                    # TODO AndriyLesyuk
+                end
+            elsif auth_hash['provider'] == 'facebook'
+                if auth_hash['extra']['raw_info']['gender']
+                    # TODO male
+                end
+                if auth_hash['extra']['raw_info']['locale']
+                    # TODO ru_RU
+                end
+                if auth_hash['extra']['raw_info']['timezone']
+                    # TODO 3
+                end
+                if auth_hash['info']['urls']['Facebook']
+                    # TODO https://www.facebook.com/app_scoped_user_id/1313788995299986/
+                end
+            elsif auth_hash['provider'] == 'github'
+                if auth_hash['extra']['raw_info']['company']
+                    # TODO Kayako
+                end
+                if auth_hash['extra']['raw_info']['location']
+                    # TODO Ivano-Frankivsk, Ukraine
+                end
+                if auth_hash['info']['urls']['Blog']
+                    # TODO www.andriylesyuk.com
+                end
+                if auth_hash['info']['urls']['GitHub']
+                    # TODO https://github.com/s-andy
+                end
+            end
         end
 
       end
