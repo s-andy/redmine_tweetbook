@@ -31,8 +31,14 @@ module RedmineTweetbook
 
             case Setting.self_registration
             when '1'
-              register_by_email_activation(user) do
-                onthefly_creation_failed(user)
+              unless Setting.plugin_meta[:skip_email_activation]
+                register_by_email_activation(user) do
+                    onthefly_creation_failed(user)
+                end
+              else
+                register_automatically(user) do
+                    onthefly_creation_failed(user)
+                end
               end
             when '3'
               register_automatically(user) do
@@ -57,57 +63,31 @@ module RedmineTweetbook
         end
 
         def populate_user_data(user, auth_hash)
+            custom_fields = []
             if auth_hash['provider'] == 'twitter'
-                if auth_hash['extra']['raw_info']['lang']
-                    # TODO en
+                if auth_hash['info']['nickname'] && Setting.plugin_meta[:twitter_nickname]
+                    custom_fields[Setting.plugin_meta[:twitter_nickname]] = auth_hash['info']['nickname']
                 end
-                if auth_hash['extra']['raw_info']['time_zone']
-                    # TODO
-                end
-                if auth_hash['extra']['raw_info']['entities']['url']['urls'][0]['expanded_url']
-                    # TODO http://www.andriylesyuk.com
-                end
-                if auth_hash['info']['description']
-                    # TODO Developer in @Kayako. Author of Mastering Redmine by @packtpub. Software developer, life analyzer and truth seeker.
-                end
-                if auth_hash['info']['location']
-                    # TODO Ivano-Frankivsk, Ukraine
-                end
-                if auth_hash['info']['urls']['Twitter']
-                    # TODO https://twitter.com/AndriyLesyuk
-                end
-                if auth_hash['info']['urls']['Website']
-                    # TODO http://t.co/Xdn0anT513
-                end
-                if auth_hash['info']['nickname']
-                    # TODO AndriyLesyuk
+                if auth_hash['info']['urls']['Website'] && Setting.plugin_meta[:twitter_website]
+                    custom_fields[Setting.plugin_meta[:twitter_website]] = auth_hash['info']['urls']['Website']
                 end
             elsif auth_hash['provider'] == 'facebook'
-                if auth_hash['extra']['raw_info']['gender']
-                    # TODO male
-                end
-                if auth_hash['extra']['raw_info']['locale']
-                    # TODO ru_RU
-                end
-                if auth_hash['extra']['raw_info']['timezone']
-                    # TODO 3
-                end
-                if auth_hash['info']['urls']['Facebook']
-                    # TODO https://www.facebook.com/app_scoped_user_id/1313788995299986/
+                if auth_hash['uid'] && Setting.plugin_meta[:facebook_uid]
+                    custom_fields[Setting.plugin_meta[:facebook_uid]] = auth_hash['uid']
                 end
             elsif auth_hash['provider'] == 'github'
-                if auth_hash['extra']['raw_info']['company']
-                    # TODO Kayako
+                if auth_hash['info']['nickname'] && Setting.plugin_meta[:github_nickname]
+                    custom_fields[Setting.plugin_meta[:github_nickname]] = auth_hash['info']['nickname']
                 end
-                if auth_hash['extra']['raw_info']['location']
-                    # TODO Ivano-Frankivsk, Ukraine
+                if auth_hash['info']['urls']['Blog'] && Setting.plugin_meta[:github_blog]
+                    custom_fields[Setting.plugin_meta[:github_blog]] = auth_hash['info']['urls']['Blog']
                 end
-                if auth_hash['info']['urls']['Blog']
-                    # TODO www.andriylesyuk.com
+                if auth_hash['extra']['raw_info']['company'] && Setting.plugin_meta[:github_company]
+                    custom_fields[Setting.plugin_meta[:github_company]] = auth_hash['extra']['raw_info']['company']
                 end
-                if auth_hash['info']['urls']['GitHub']
-                    # TODO https://github.com/s-andy
-                end
+            end
+            if custom_fields.any?
+                user.custom_field_values = custom_fields
             end
         end
 

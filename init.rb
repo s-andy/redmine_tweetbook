@@ -10,6 +10,9 @@ Redmine::Plugin.register :redmine_tweetbook do
 
   $tweetbook_settings = YAML::load(File.open("#{File.dirname(__FILE__)}/config/settings.yml"))
 
+  settings :default => {
+    :skip_email_activation => true
+  }, :partial => 'settings/tweetbook'
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do

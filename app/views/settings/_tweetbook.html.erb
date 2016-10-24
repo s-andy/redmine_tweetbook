@@ -1,0 +1,56 @@
+<% if Setting.self_registration == '1' %>
+  <fieldset>
+    <legend><%= l(:label_general) %></legend>
+    <p>
+      <%= label_tag('settings[skip_email_activation]', l(:label_skip_email_activation)) %>
+      <%= check_box_tag('settings[skip_email_activation]', 1, @settings[:skip_email_activation]) %>
+    </p>
+  </fieldset>
+<% end %>
+
+<% user_custom_fields = UserCustomField.order(:position) %>
+<% if user_custom_fields.any? %>
+  <fieldset>
+    <legend><%= l(:label_twitter) %></legend>
+    <p>
+      <%= label_tag('settings[twitter_nickname]', l(:label_twitter_nickname)) %>
+      <%= select_tag('settings[twitter_nickname]', content_tag(:option) + options_from_collection_for_select(user_custom_fields, :id, :name, @settings[:twitter_nickname].to_i)) %>
+      <em class="info"><%= l(:text_twitter_nickname) %></em>
+    </p>
+    <p>
+      <%= label_tag('settings[twitter_website]', l(:label_twitter_website)) %>
+      <%= select_tag('settings[twitter_website]', content_tag(:option) + options_from_collection_for_select(user_custom_fields, :id, :name, @settings[:twitter_website].to_i)) %>
+      <em class="info"><%= l(:text_twitter_website) %></em>
+    </p>
+  </fieldset>
+
+  <fieldset>
+    <legend><%= l(:label_facebook) %></legend>
+    <p>
+      <%= label_tag('settings[facebook_uid]', l(:label_facebook_uid)) %>
+      <%= select_tag('settings[facebook_uid]', content_tag(:option) + options_from_collection_for_select(user_custom_fields, :id, :name, @settings[:facebook_uid].to_i)) %>
+      <em class="info"><%= l(:text_facebook_uid) %></em>
+    </p>
+  </fieldset>
+
+  <fieldset>
+    <legend><%= l(:label_github) %></legend>
+    <p>
+      <%= label_tag('settings[github_nickname]', l(:label_github_nickname)) %>
+      <%= select_tag('settings[github_nickname]', content_tag(:option) + options_from_collection_for_select(user_custom_fields, :id, :name, @settings[:github_nickname].to_i)) %>
+      <em class="info"><%= l(:text_github_nickname) %></em>
+    </p>
+    <p>
+      <%= label_tag('settings[github_blog]', l(:label_github_blog)) %>
+      <%= select_tag('settings[github_blog]', content_tag(:option) + options_from_collection_for_select(user_custom_fields, :id, :name, @settings[:github_blog].to_i)) %>
+      <em class="info"><%= l(:text_github_blog) %></em>
+    </p>
+    <p>
+      <%= label_tag('settings[github_company]', l(:label_github_company)) %>
+      <%= select_tag('settings[github_company]', content_tag(:option) + options_from_collection_for_select(user_custom_fields, :id, :name, @settings[:github_company].to_i)) %>
+      <em class="info"><%= l(:text_github_company) %></em>
+    </p>
+  </fieldset>
+<% else %>
+  <div class="nodata" style="margin: 10px 0px;"><%= l(:notice_no_user_custom_fields) %></div>
+<% end %>

@@ -1,4 +1,24 @@
 en:
-  label_tweetbook: 'TweetBook'
+  label_tweetbook: TweetBook
+  label_general: General
+  label_twitter: Twitter
+  label_facebook: Facebook
+  label_github: GitHub
 
-  notice_account_missing_data: The authentication provider did not provide all the data needed to create your account. Please make sure, that your email address is verified.
+  label_skip_email_activation: Skip account activation by email
+  label_twitter_nickname: Custom field for nickname
+  label_twitter_website: Custom field for website
+  label_facebook_uid: Custom field for UID
+  label_github_nickname: Custom field for nickname
+  label_github_blog: Custom field for blog
+  label_github_company: Custom field for company
+
+  text_twitter_nickname: "Will be used to store Twitter nickname without @, e.g.: AndriyLesyuk"
+  text_twitter_website: "Will be used to store shortened website URL, e.g.: http://t.co/Xdn0anT513"
+  text_facebook_uid: "Will be used to store numeric Facebook user ID, e.g.: 1313788995299986"
+  text_github_nickname: "Will be used to store GitHub nickname, e.g.: s-andy"
+  text_github_blog: "Will be used to store blog URL, e.g.: www.andriylesyuk.com"
+  text_github_company: "Will be used to store company name, e.g.: Kayako"
+
+  notice_no_user_custom_fields: No user custom fields available.
+  notice_account_missing_data: The authentication provider did not provide all the data needed to create your account. Please make sure, that your email address is verified and is not private.
