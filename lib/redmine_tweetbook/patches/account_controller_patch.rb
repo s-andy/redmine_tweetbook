@@ -31,7 +31,7 @@ module RedmineTweetbook
 
             case Setting.self_registration
             when '1'
-              unless Setting.plugin_meta[:skip_email_activation]
+              unless Setting.plugin_redmine_tweetbook[:skip_email_activation]
                 register_by_email_activation(user) do
                     onthefly_creation_failed(user)
                 end
@@ -65,25 +65,25 @@ module RedmineTweetbook
         def populate_user_data(user, auth_hash)
             custom_fields = []
             if auth_hash['provider'] == 'twitter'
-                if auth_hash['info']['nickname'] && Setting.plugin_meta[:twitter_nickname]
-                    custom_fields[Setting.plugin_meta[:twitter_nickname]] = auth_hash['info']['nickname']
+                if auth_hash['info']['nickname'] && Setting.plugin_redmine_tweetbook[:twitter_nickname]
+                    custom_fields[Setting.plugin_redmine_tweetbook[:twitter_nickname]] = auth_hash['info']['nickname']
                 end
-                if auth_hash['info']['urls']['Website'] && Setting.plugin_meta[:twitter_website]
-                    custom_fields[Setting.plugin_meta[:twitter_website]] = auth_hash['info']['urls']['Website']
+                if auth_hash['info']['urls']['Website'] && Setting.plugin_redmine_tweetbook[:twitter_website]
+                    custom_fields[Setting.plugin_redmine_tweetbook[:twitter_website]] = auth_hash['info']['urls']['Website']
                 end
             elsif auth_hash['provider'] == 'facebook'
-                if auth_hash['uid'] && Setting.plugin_meta[:facebook_uid]
-                    custom_fields[Setting.plugin_meta[:facebook_uid]] = auth_hash['uid']
+                if auth_hash['uid'] && Setting.plugin_redmine_tweetbook[:facebook_uid]
+                    custom_fields[Setting.plugin_redmine_tweetbook[:facebook_uid]] = auth_hash['uid']
                 end
             elsif auth_hash['provider'] == 'github'
-                if auth_hash['info']['nickname'] && Setting.plugin_meta[:github_nickname]
-                    custom_fields[Setting.plugin_meta[:github_nickname]] = auth_hash['info']['nickname']
+                if auth_hash['info']['nickname'] && Setting.plugin_redmine_tweetbook[:github_nickname]
+                    custom_fields[Setting.plugin_redmine_tweetbook[:github_nickname]] = auth_hash['info']['nickname']
                 end
-                if auth_hash['info']['urls']['Blog'] && Setting.plugin_meta[:github_blog]
-                    custom_fields[Setting.plugin_meta[:github_blog]] = auth_hash['info']['urls']['Blog']
+                if auth_hash['info']['urls']['Blog'] && Setting.plugin_redmine_tweetbook[:github_blog]
+                    custom_fields[Setting.plugin_redmine_tweetbook[:github_blog]] = auth_hash['info']['urls']['Blog']
                 end
-                if auth_hash['extra']['raw_info']['company'] && Setting.plugin_meta[:github_company]
-                    custom_fields[Setting.plugin_meta[:github_company]] = auth_hash['extra']['raw_info']['company']
+                if auth_hash['extra']['raw_info']['company'] && Setting.plugin_redmine_tweetbook[:github_company]
+                    custom_fields[Setting.plugin_redmine_tweetbook[:github_company]] = auth_hash['extra']['raw_info']['company']
                 end
             end
             if custom_fields.any?
